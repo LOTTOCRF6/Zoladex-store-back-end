@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: gunicorn zoladex_back-endapp:app
