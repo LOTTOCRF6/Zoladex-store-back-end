@@ -115,7 +115,7 @@ def brand_registration():
         return response
 
 
-@app.route('/user-registration/', methods=["POST"])
+@app.route('/user-registration/', methods=["POST", "GET"])
 @cross_origin()
 def user_registration():
     response = {}
@@ -146,6 +146,21 @@ def user_registration():
             # msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
             # msg.body = "You have successfully registered"
             # mail.send(msg)
+        return response
+
+    if request.method == "GET":
+        response = {}
+        with sqlite3.connect("Zoladex.db") as conn:
+            cursor = conn.cursor()
+            cursor.row_factory = sqlite3.Row
+            cursor.execute("SELECT * FROM user_register")
+            deals = cursor.fetchall()
+            deal_acc = []
+            for i in deals:
+                deal_acc.append({x: i[x] for x in i.keys()})
+
+        response['status_code'] = 200
+        response['data'] = tuple(deal_acc)
         return response
 
 
