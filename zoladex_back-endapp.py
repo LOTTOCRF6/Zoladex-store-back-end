@@ -9,10 +9,11 @@ from flask_mail import Mail
 from smtplib import SMTPRecipientsRefused, SMTPAuthenticationError
 
 
+
 class User(object):
-    def __init__(self, id, username, password):
-        self.id = id
-        self.username = username
+    def __init__(self, user_id, email, password):
+        self.user_id = user_id
+        self.email = email
         self.password = password
 
 
@@ -39,7 +40,7 @@ def init_user_login_table():
         conn.execute("CREATE TABLE IF NOT EXISTS user_login (user_login_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                      "user_email TEXT NOT NULL,"
                      "password TEXT NOT NULL,"
-                     "login_date TEXT NOT NULL,"
+                     "login_date,"
                      "CONSTRAINT fk_user FOREIGN KEY (user_email) REFERENCES user_registration(user_id))")
     print("Login table created successfully.")
 
@@ -62,6 +63,7 @@ def init_brand_register_table():
     print("brands table created successfully")
     conn.close()
 
+
 def init_brand_products_table():
     conn = sqlite3.connect('Zoladex.db')
     print("Opened database successfully")
@@ -79,6 +81,7 @@ def init_brand_products_table():
     print("brand_products table created successfully")
     conn.close()
 
+
 def init_order_products_table():
     conn = sqlite3.connect('Zoladex.db')
     print("Opened database successfully")
@@ -95,6 +98,39 @@ def init_order_products_table():
     conn.close()
 
 
+def init_products_cart_table():
+    conn = sqlite3.connect('Zoladex.db')
+    print("Opened database successfully")
+
+    conn.execute("CREATE TABLE IF NOT EXISTS product_cart(cart_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                 "product_tittle TEXT NOT NULL,"
+                 "brand_name TEXT NOT NULL,"
+                 "image TEXT NOT NULL,"
+                 "price TEXT NOT NULL,"
+                 "size TEXT NOT NULL,"
+                 "colour TEXT NOT NULL,"
+                 "description TEXT NOT NULL)")
+    print("product_cart table created successfully")
+    conn.close()
+
+
+def init_checkout_products_table():
+    conn = sqlite3.connect('Zoladex.db')
+    print("Opened database successfully")
+
+    conn.execute("CREATE TABLE IF NOT EXISTS checkout_product(cart_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                 "product_tittle TEXT NOT NULL,"
+                 "brand_name TEXT NOT NULL,"
+                 "image TEXT NOT NULL,"
+                 "price TEXT NOT NULL,"
+                 "size TEXT NOT NULL,"
+                 "colour TEXT NOT NULL,"
+                 "description TEXT NOT NULL)")
+    print("product_cart table created successfully")
+    conn.close()
+
+
+init_products_cart_table()
 init_brand_products_table()
 init_order_products_table()
 init_user_register_table()
@@ -102,7 +138,48 @@ init_user_login_table()
 init_brand_register_table()
 
 
+def fetch_users():
+    with sqlite3.connect('Zoladex.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM user_login")
+        users = cursor.fetchall()
+        new_data = []
+        for data in users:
+            new_data.append(User(data[0], data[7], data[4]))
+    return new_data
+
+
+users = fetch_users()
+
+
+email_table = {u.email: u for u in users}
+user_id_table = {u.user_id: u for u in users}
+
+
+def authenticate(email, password):
+    user = email_table.get(email, None)
+    if user and hmac.compare_digest(user.password.encode('utf-8'), password.encode('utf-8')):
+        return user
+
+
+def identity(payload):
+    user_id = payload['identity']
+    return user_id_table.get(user_id, None)
+
+
 app = Flask(__name__)
+CORS(app)
+app.debug = True
+app.config['SECRET_KEY'] = 'super-secret'
+
+jwt = JWT(app, authenticate, identity)
+
+
+@app.route('/protected')
+@jwt_required()
+@cross_origin()
+def protected():
+    return '%s' % current_identity
 
 
 @app.route('/create-blog/', methods=["POST"])
@@ -220,7 +297,7 @@ def user_registration():
         with sqlite3.connect("Zoladex.db") as conn:
             cursor = conn.cursor()
             cursor.row_factory = sqlite3.Row
-            cursor.execute("SELECT * FROM user_register")
+            cursor.execute("SELECT * FROM user_registration")
             deals = cursor.fetchall()
             deal_acc = []
             for i in deals:
@@ -237,7 +314,6 @@ def user_login():
     response = {}
     if request.method == "POST":
         try:
-
             user_email = request.form['user_email']
             password = request.form['password']
             date_created = datetime.datetime.now()
