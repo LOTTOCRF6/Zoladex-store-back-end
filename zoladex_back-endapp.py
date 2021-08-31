@@ -10,10 +10,15 @@ from smtplib import SMTPRecipientsRefused, SMTPAuthenticationError
 
 
 class User(object):
-    def __init__(self, user_id, email, password):
+    def __init__(self, user_id, first_name, last_name, username, password, address, phone, email):
         self.user_id = user_id
-        self.email = email
+        self.first_name = first_name
+        self.last_name = last_name
+        self.username = username
         self.password = password
+        self.address = address
+        self.phone = phone
+        self.email = email
 
 
 # user registration
@@ -214,12 +219,12 @@ init_brand_register_table()
 def fetch_users():
     with sqlite3.connect('Zoladex.db') as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM user_login")
+        cursor.execute("SELECT * FROM user_registration")
         users = cursor.fetchall()
         new_data = []
         for data in users:
-            new_data.append(User(data[0], data[7], data[4]))
-    return new_data
+            new_data.append(User(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]))
+        return new_data
 
 
 users = fetch_users()
@@ -249,7 +254,7 @@ jwt = JWT(app, authenticate, identity)
 
 
 @app.route('/protected')
-@jwt_required()
+# @jwt_required()
 @cross_origin()
 def protected():
     return '%s' % current_identity
