@@ -741,5 +741,269 @@ def contact_us():
         return response
 
 
+# delete user by id
+@app.route("/delete-user/<int:post_id>", methods=['POST'])
+@cross_origin()
+# @jwt_required()
+def delete_user(user_id):
+    response = {}
+    with sqlite3.connect("Zoladex.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM user_registration WHERE user_id=" + str(user_id))
+        conn.commit()
+        response['status_code'] = 200
+        response['message'] = "User deleted successfully."
+    return response
+
+
+# update single user
+@app.route('/update-user/<int:user_id>/', methods=["PUT"])
+@cross_origin()
+# @jwt_required()
+def edit_user(user_id):
+    response = {}
+
+    if request.method == "PUT":
+        with sqlite3.connect('Zoladex.db') as conn:
+            incoming_data = dict(request.json)
+
+            put_data = {}
+
+            if incoming_data.get("first_name") is not None:  # check if the updated column is price
+                put_data["first_name"] = incoming_data.get("first_name")
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE user_registration SET first_name =? WHERE user_id=?", (put_data["first_name"], user_id))
+                    conn.commit()
+                    response['message'] = "First name updated"
+                    response['status_code'] = 200
+            if incoming_data.get("last_name") is not None:
+                put_data['last_name'] = incoming_data.get('last_name')
+
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE user_registration SET last_name =? WHERE user_id=?", (put_data["last_name"], user_id))
+                    conn.commit()
+
+                    response["content"] = "Last name updated successfully"
+                    response["status_code"] = 200
+
+            if incoming_data.get("username") is not None:
+                put_data['username'] = incoming_data.get('username')
+
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE user_registration SET username =? WHERE user_id=?", (put_data["username"], user_id))
+                    conn.commit()
+
+                    response["content"] = "Username updated successfully"
+                    response["status_code"] = 200
+
+            if incoming_data.get("password") is not None:
+                put_data['password'] = incoming_data.get('password')
+
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE user_registration SET password =? WHERE user_id=?", (put_data["password"], user_id))
+                    conn.commit()
+
+                    response["content"] = "Password updated successfully"
+                    response["status_code"] = 200
+
+            if incoming_data.get("address") is not None:
+                put_data['address'] = incoming_data.get('address')
+
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE user_registration SET address =? WHERE user_id=?", (put_data["address"], user_id))
+                    conn.commit()
+
+                    response["content"] = "Address updated successfully"
+                    response["status_code"] = 200
+
+            if incoming_data.get("phone") is not None:
+                put_data['phone'] = incoming_data.get('phone')
+
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE user_registration SET phone =? WHERE user_id=?",
+                                   (put_data["phone"], user_id))
+                    conn.commit()
+
+                    response["content"] = "Phone updated successfully"
+                    response["status_code"] = 200
+
+            if incoming_data.get("email") is not None:
+                put_data['email'] = incoming_data.get('email')
+
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE user_registration SET email =? WHERE user_id=?", (put_data["email"], user_id))
+                    conn.commit()
+
+                    response["content"] = "Email updated successfully"
+                    response["status_code"] = 200
+
+    return response
+
+
+# update product by id
+@app.route('/update-product/<int:product_id>/', methods=["PUT"])
+@cross_origin()
+# @jwt_required()
+def update_product(product_id):
+    response = {}
+
+    if request.method == "PUT":
+        with sqlite3.connect('Zoladex.db') as conn:
+            incoming_data = dict(request.json)
+
+            put_data = {}
+
+            if incoming_data.get("product_tittle") is not None:  # check if the updated column is price
+                put_data["product_tittle"] = incoming_data.get("product_tittle")
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE brand_products SET product_tittle =? WHERE product_id=?", (put_data["product_tittle"], product_id))
+                    conn.commit()
+                    response['message'] = "Product_tittle updated"
+                    response['status_code'] = 200
+
+            if incoming_data.get("brand_name") is not None:
+                put_data['brand_name'] = incoming_data.get('brand_name')
+
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE brand_products SET brand_name =? WHERE product_id=?",
+                                   (put_data["brand_name"], product_id))
+                    conn.commit()
+
+                    response["content"] = "Brand name updated successfully"
+                    response["status_code"] = 200
+
+            if incoming_data.get("image") is not None:
+                put_data['image'] = incoming_data.get('image')
+
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE brand_products SET image =? WHERE product_id=?", (put_data["image"], product_id))
+                    conn.commit()
+
+                    response["content"] = "Product image updated successfully"
+                    response["status_code"] = 200
+
+            if incoming_data.get("user_id") is not None:
+                put_data['user_id'] = incoming_data.get('user_id')
+
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE brand_products SET user_id =? WHERE product_id=?", (put_data["user_id"], product_id))
+                    conn.commit()
+
+                    response["content"] = "User id updated successfully"
+                    response["status_code"] = 200
+
+            if incoming_data.get("price") is not None:
+                put_data['price'] = incoming_data.get('price')
+
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE brand_products SET price =? WHERE product_id=?",
+                                   (put_data["price"], product_id))
+                    conn.commit()
+
+                    response["content"] = "Price updated successfully"
+                    response["status_code"] = 200
+
+            if incoming_data.get("size") is not None:
+                put_data['size'] = incoming_data.get('size')
+
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE brand_products SET size =? WHERE product_id=?",
+                                   (put_data["size"], product_id))
+                    conn.commit()
+
+                    response["content"] = "Size updated successfully"
+                    response["status_code"] = 200
+
+            if incoming_data.get("colour") is not None:
+                put_data['colour'] = incoming_data.get('colour')
+
+                with sqlite3.connect('Zoladex.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE brand_products SET colour =? WHERE product_id=?", (put_data["colour"], product_id))
+                    conn.commit()
+
+                    response["content"] = "Colour updated successfully"
+                    response["status_code"] = 200
+
+    return response
+
+
+# delete product by id
+@app.route("/delete-product/<int:prod_id>", methods=['POST'])
+@cross_origin()
+# @jwt_required()
+def delete_single_product(product_id):
+    response = {}
+    with sqlite3.connect("Zoladex.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM brand_products WHERE product_id=" + str(product_id))
+        conn.commit()
+        response['status_code'] = 200
+        response['message'] = "Product deleted successfully."
+    return response
+
+
+@app.route('/orders/', methods=["POST", "GET"])
+@cross_origin()
+# @jwt_required()
+def orders_info():
+    response = {}
+    now = datetime.now()
+    if request.method == "POST":
+        try:
+            product_image = request.json['product_image']
+            order_number = request.json['order_number']
+            product_name = request.json['product_name']
+            total_price = request.json['total_price']
+            product_quantity = request.json['product_quantity']
+
+            with sqlite3.connect("Zoladex.db") as conn:
+                cursor = conn.cursor()
+                cursor.execute("INSERT INTO orders_product("
+                               "product_image,"
+                               "order_date,"
+                               "order_number,"
+                               "product_name,"
+                               "total_price,"
+                               "product_quantity) VALUES(?, ?, ?, ?, ?, ?)",
+                               (product_image, now, order_number, product_name, total_price, product_quantity))
+                conn.commit()
+                response["message"] = "Order added successfully "
+                response["status_code"] = 201
+
+                return response
+        except Exception:
+            response["message"] = "Enter correct order injsonation"
+            response["status_code"] = 401
+            return response
+    if request.method == "GET":
+
+        with sqlite3.connect("Zoladex.db") as conn:
+            cursor = conn.cursor()
+            cursor.row_factory = sqlite3.Row
+            cursor.execute("SELECT * FROM orders_product")
+            posts = cursor.fetchall()
+            accumulator = []
+
+            for i in posts:
+                accumulator.append({k: i[k] for k in i.keys()})
+
+        response['status_code'] = 200
+        response['data'] = tuple(accumulator)
+        return jsonify(response)
+
 if __name__ == '__main__':
     app.run(debug=True)
