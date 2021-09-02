@@ -79,12 +79,11 @@ def init_brand_products_table():
                  "product_tittle TEXT NOT NULL,"
                  "brand_name TEXT NOT NULL,"
                  "image TEXT NOT NULL,"
-                 "user_id INTEGER,"
-                 "price TEXT NOT NULL,"
+                 "price INTEGER,"
                  "size TEXT NOT NULL,"
                  "colour TEXT NOT NULL,"
                  "description TEXT NOT NULL,"
-                 "CONSTRAINT fk_product FOREIGN KEY (user_id) REFERENCES user_registration(user_id))")
+                 "CONSTRAINT fk_product FOREIGN KEY (PRODUCT_id) REFERENCES user_registration(user_id))")
     print("brand_products table created successfully")
     conn.close()
 
@@ -99,7 +98,7 @@ def init_order_products_table():
                  "order_no TEXT NOT NULL,"
                  "brand_name TEXT NOT NULL,"
                  "image TEXT NOT NULL,"
-                 "price TEXT NOT NULL,"
+                 "price INTEGER,"
                  "size TEXT NOT NULL,"
                  "colour TEXT NOT NULL,"
                  "description TEXT NOT NULL,"
@@ -118,7 +117,7 @@ def init_products_cart_table():
                  "product_tittle TEXT NOT NULL,"
                  "brand_name TEXT NOT NULL,"
                  "image TEXT NOT NULL,"
-                 "price TEXT NOT NULL,"
+                 "price INTEGER,"
                  "size TEXT NOT NULL,"
                  "colour TEXT NOT NULL,"
                  "description TEXT NOT NULL,"
@@ -138,7 +137,7 @@ def init_checkout_products_table():
                  "order_no TEXT NOT NULL,"
                  "brand_name TEXT NOT NULL,"
                  "image TEXT NOT NULL,"
-                 "total_price TEXT NOT NULL,"
+                 "total_price INTEGER,"
                  "size TEXT NOT NULL,"
                  "colour TEXT NOT NULL,"
                  "description TEXT NOT NULL,"
@@ -196,7 +195,7 @@ def init_contact_table():
                  "fullname TEXT NOT NULL,"
                  "email TEXT NOT NULL,"
                  "regarding TEXT NOT NULL,"
-                 "order_no TEXT NOT NULL,"
+                 "order_no INTEGER,"
                  "questions TEXT NOT NULL,"
                  "message TEXT NOT NULL,"
                  "contact_date,"
