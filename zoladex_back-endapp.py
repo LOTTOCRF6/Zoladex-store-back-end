@@ -5,7 +5,7 @@ import datetime
 from flask import Flask, request, jsonify
 from flask_jwt import JWT, jwt_required, current_identity
 from flask_cors import CORS, cross_origin
-from flask_mail import Mail
+from flask_mail import Mail, Message
 from smtplib import SMTPRecipientsRefused, SMTPAuthenticationError
 
 
@@ -252,6 +252,15 @@ app.config['SECRET_KEY'] = 'super-secret'
 jwt = JWT(app, authenticate, identity)
 
 
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'sithandathuzipho@gmail.com'
+app.config['MAIL_PASSWORD'] = 'Crf6ZS@#'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+
+
 @app.route('/protected')
 # @jwt_required()
 @cross_origin()
@@ -313,9 +322,9 @@ def brand_registration():
             response["message"] = "success"
             response["status_code"] = 201
 
-            # msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            # msg.body = "You have successfully registered"
-            # mail.send(msg)
+            msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
+            msg.body = "You have successfully registered"
+            mail.send(msg)
         return response
     if request.method == "GET":
         response = {}
@@ -364,9 +373,9 @@ def user_registration():
             response["message"] = "success"
             response["status_code"] = 201
 
-            # msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            # msg.body = "You have successfully registered"
-            # mail.send(msg)
+            msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
+            msg.body = "You have successfully registered"
+            mail.send(msg)
         return response
 
     if request.method == "GET":
@@ -443,10 +452,6 @@ def brand_products():
             conn.commit()
             response["message"] = "success"
             response["status_code"] = 201
-
-            # msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            # msg.body = "You have successfully registered"
-            # mail.send(msg)
         return response
 
     if request.method == "GET":
@@ -530,6 +535,10 @@ def checkouts():
 
         response['status_code'] = 200
         response['data'] = tuple(deal_acc)
+
+        msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
+        msg.body = "You have successfully checkout your Products"
+        mail.send(msg)
         return response
 
 
@@ -615,9 +624,9 @@ def payment():
             response["message"] = "success"
             response["status_code"] = 201
 
-            # msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            # msg.body = "You have successfully registered"
-            # mail.send(msg)
+            msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
+            msg.body = "Your Payment is done"
+            mail.send(msg)
         return response
 
     if request.method == "GET":
@@ -670,9 +679,9 @@ def shipping():
             response["message"] = "success"
             response["status_code"] = 201
 
-            # msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            # msg.body = "You have successfully registered"
-            # mail.send(msg)
+            msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
+            msg.body = "Your product is on the way to you"
+            mail.send(msg)
         return response
 
     if request.method == "GET":
@@ -719,9 +728,9 @@ def contact_us():
             response["message"] = "success"
             response["status_code"] = 201
 
-            # msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            # msg.body = "You have successfully registered"
-            # mail.send(msg)
+            msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
+            msg.body = "Thank for contacting Zoladex Clothing we will come to you soon!"
+            mail.send(msg)
         return response
 
     if request.method == "GET":
@@ -1003,6 +1012,7 @@ def orders_info():
         response['status_code'] = 200
         response['data'] = tuple(accumulator)
         return jsonify(response)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
