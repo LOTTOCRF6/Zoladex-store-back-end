@@ -721,12 +721,12 @@ def contact_us():
     response = {}
     if request.method == "POST":
 
-        fullname = request.form['fullname']
-        email = request.form['email']
-        regarding = request.form['regarding']
-        order_no = request.form['order_no']
-        questions = request.form['questions']
-        message = request.form['message']
+        fullname = request.json['fullname']
+        email = request.json['email']
+        regarding = request.json['regarding']
+        order_no = request.json['order_no']
+        questions = request.json['questions']
+        message = request.json['message']
         contact_date = datetime.datetime.now()
 
         with sqlite3.connect("Zoladex.db") as conn:
