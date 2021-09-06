@@ -720,32 +720,35 @@ def shipping():
 def contact_us():
     response = {}
     if request.method == "POST":
+        try:
+            fullname = request.json['fullname']
+            email = request.json['email']
+            regarding = request.json['regarding']
+            order_no = request.json['order_no']
+            questions = request.json['questions']
+            message = request.json['message']
+            contact_date = datetime.datetime.now()
 
-        fullname = request.json['fullname']
-        email = request.json['email']
-        regarding = request.json['regarding']
-        order_no = request.json['order_no']
-        questions = request.json['questions']
-        message = request.json['message']
-        contact_date = datetime.datetime.now()
+            with sqlite3.connect("Zoladex.db") as conn:
+                cursor = conn.cursor()
+                cursor.execute("INSERT INTO contact("
+                               "fullname,"
+                               "email,"
+                               "regarding,"
+                               "order_no,"
+                               "questions,"
+                               "message,"
+                               "contact_date) VALUES(?, ?, ?, ?, ?, ?, ?)", (fullname, email, regarding, order_no, questions, message, contact_date))
+                conn.commit()
+                response["message"] = "success"
+                response["status_code"] = 201
 
-        with sqlite3.connect("Zoladex.db") as conn:
-            cursor = conn.cursor()
-            cursor.execute("INSERT INTO contact("
-                           "fullname,"
-                           "email,"
-                           "regarding,"
-                           "order_no,"
-                           "questions,"
-                           "message,"
-                           "contact_date) VALUES(?, ?, ?, ?, ?, ?, ?)", (fullname, email, regarding, order_no, questions, message, contact_date))
-            conn.commit()
-            response["message"] = "success"
-            response["status_code"] = 201
-
-            msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            msg.body = "Thank for contacting Zoladex Clothing we will respond to you soon!"
-            mail.send(msg)
+                msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
+                msg.body = "Thank for contacting Zoladex Clothing we will respond to you soon!"
+                mail.send(msg)
+        except ValueError:
+            response["status_code"] = 400
+            response["message"] = "Unable to send"
         return response
 
     if request.method == "GET":
