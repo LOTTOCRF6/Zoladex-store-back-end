@@ -1,8 +1,8 @@
 import hmac
 import sqlite3
 import datetime
-import os
-from twilio.rest import Client
+# import os
+# from twilio.rest import Client
 
 from flask import Flask, request, jsonify
 from flask_jwt import JWT, jwt_required, current_identity
