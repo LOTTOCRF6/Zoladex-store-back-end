@@ -743,9 +743,9 @@ def contact_us():
             response["message"] = "success"
             response["status_code"] = 201
 
-            # msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            # msg.body = "Thank for contacting Zoladex Clothing we will respond to you soon!"
-            # mail.send(msg)
+            msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
+            msg.body = "Thank for contacting Zoladex Clothing we will respond to you soon!"
+            mail.send(msg)
         return response
 
     if request.method == "GET":
