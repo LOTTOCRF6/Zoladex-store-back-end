@@ -1,6 +1,8 @@
 import hmac
 import sqlite3
 import datetime
+import os
+from twilio.rest import Client
 
 from flask import Flask, request, jsonify
 from flask_jwt import JWT, jwt_required, current_identity
@@ -376,6 +378,19 @@ def user_registration():
             msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
             msg.body = "You have successfully registered"
             mail.send(msg)
+
+            # Find these values at https://twilio.com/user/account
+            # To set up environmental variables, see http://twil.io/secure
+            # account_sid = os.environ['AC7b6bb3b512e29502ec9e68cc0e832359']
+            # auth_token = os.environ['e8efae0e430ddedfdbd63b4f83c5211f']
+            #
+            # client = Client(account_sid, auth_token)
+            #
+            # client.api.account.messages.create(
+            #     to="+27633498809",
+            #     from_="+19412542478",
+            #     body="Hello there!")
+
         return response
 
     if request.method == "GET":
@@ -712,7 +727,7 @@ def contact_us():
         order_no = request.form['order_no']
         questions = request.form['questions']
         message = request.form['message']
-        date = datetime.datetime.now()
+        contact_date = datetime.datetime.now()
 
         with sqlite3.connect("Zoladex.db") as conn:
             cursor = conn.cursor()
@@ -723,13 +738,13 @@ def contact_us():
                            "order_no,"
                            "questions,"
                            "message,"
-                           "date) VALUES(?, ?, ?, ?, ?, ?, ?)", (fullname, email, regarding, order_no, questions, message, date))
+                           "contact_date) VALUES(?, ?, ?, ?, ?, ?, ?)", (fullname, email, regarding, order_no, questions, message, contact_date))
             conn.commit()
             response["message"] = "success"
             response["status_code"] = 201
 
             msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            msg.body = "Thank for contacting Zoladex Clothing we will come to you soon!"
+            msg.body = "Thank for contacting Zoladex Clothing we will respond to you soon!"
             mail.send(msg)
         return response
 
