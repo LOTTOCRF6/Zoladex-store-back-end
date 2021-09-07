@@ -14,6 +14,7 @@ from smtplib import SMTPRecipientsRefused, SMTPAuthenticationError
 class User(object):
     def __init__(self, user_id, first_name, last_name, username, password, address, phone, email):
         self.user_id = user_id
+        self.id = user_id
         self.first_name = first_name
         self.last_name = last_name
         self.username = username
@@ -224,19 +225,20 @@ def fetch_users():
         users = cursor.fetchall()
         new_data = []
         for data in users:
-            new_data.append(User(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]))
+            new_data.append(User(data[0], data[3], data[4], data[3], data[4], data[5], data[6], data[7]))
+
     return new_data
 
 
 users = fetch_users()
 
 
-email_table = {u.email: u for u in users}
+username_table = {u.username: u for u in users}
 user_id_table = {u.user_id: u for u in users}
 
 
-def authenticate(email, password):
-    user = email_table.get(email, None)
+def authenticate(username, password):
+    user = username_table.get(username, None)
     if user and hmac.compare_digest(user.password.encode('utf-8'), password.encode('utf-8')):
         return user
 
@@ -261,13 +263,6 @@ app.config['MAIL_PASSWORD'] = 'Crf6ZS@#Mail.com'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
-
-
-@app.route('/protected')
-# @jwt_required()
-@cross_origin()
-def protected():
-    return '%s' % current_identity
 
 
 @app.route('/create-blog/', methods=["POST"])
@@ -372,6 +367,9 @@ def user_registration():
                            "email,"
                            "datetime) VALUES(?, ?, ?, ?, ?, ?, ?, ?)", (first_name, last_name, username, password, address, phone, email, today_date))
             conn.commit()
+            global users
+            users = fetch_users()
+
             response["message"] = "success"
             response["status_code"] = 201
 
