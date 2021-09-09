@@ -373,9 +373,9 @@ def user_registration():
             response["message"] = "success"
             response["status_code"] = 201
 
-            msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            msg.body = "You have successfully registered"
-            mail.send(msg)
+            # msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
+            # msg.body = "You have successfully registered"
+            # mail.send(msg)
 
             # Find these values at https://twilio.com/user/account
             # To set up environmental variables, see http://twil.io/secure
