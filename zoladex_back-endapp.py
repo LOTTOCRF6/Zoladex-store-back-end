@@ -293,15 +293,15 @@ def brand_registration():
     response = {}
     if request.method == "POST":
 
-        ceo_name = request.form['ceo_name']
-        ceo_surname = request.form['ceo_surname']
-        brand_name = request.form['brand_name']
-        brand_registration_number = request.form['brand_registration_number']
-        brand_style = request.form['brand_style']
-        social_media_link = request.form['social_media_link']
-        office_address = request.form['office_address']
-        brand_phone = request.form['brand_phone']
-        brand_email = request.form['brand_email']
+        ceo_name = request.json['ceo_name']
+        ceo_surname = request.json['ceo_surname']
+        brand_name = request.json['brand_name']
+        brand_registration_number = request.json['brand_registration_number']
+        brand_style = request.json['brand_style']
+        social_media_link = request.json['social_media_link']
+        office_address = request.json['office_address']
+        brand_phone = request.json['brand_phone']
+        brand_email = request.json['brand_email']
 
         with sqlite3.connect("Zoladex.db") as conn:
             cursor = conn.cursor()
@@ -346,13 +346,13 @@ def user_registration():
     response = {}
     if request.method == "POST":
 
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        username = request.form['username']
-        password = request.form['password']
-        address = request.form['address']
-        phone = request.form['phone']
-        email = request.form['email']
+        first_name = request.json['first_name']
+        last_name = request.json['last_name']
+        username = request.json['username']
+        password = request.json['password']
+        address = request.json['address']
+        phone = request.json['phone']
+        email = request.json['email']
         today_date = datetime.datetime.now()
 
         with sqlite3.connect("Zoladex.db") as conn:
@@ -413,8 +413,8 @@ def user_login():
     response = {}
     if request.method == "POST":
         try:
-            user_email = request.form['user_email']
-            password = request.form['password']
+            user_email = request.json['user_email']
+            password = request.json['password']
             date_created = datetime.datetime.now()
 
             with sqlite3.connect("Zoladex.db") as conn:
@@ -444,13 +444,13 @@ def brand_products():
     response = {}
     if request.method == "POST":
 
-        product_tittle = request.form['product_tittle']
-        brand_name = request.form['brand_name']
-        image = request.form['image']
-        price = request.form['price']
-        size = request.form['size']
-        colour = request.form['colour']
-        description = request.form['description']
+        product_tittle = request.json['product_tittle']
+        brand_name = request.json['brand_name']
+        image = request.json['image']
+        price = request.json['price']
+        size = request.json['size']
+        colour = request.json['colour']
+        description = request.json['description']
 
         with sqlite3.connect("Zoladex.db") as conn:
             cursor = conn.cursor()
@@ -611,16 +611,16 @@ def payment():
     response = {}
     if request.method == "POST":
 
-        cardholder_name = request.form['cardholder_name']
-        card_number = request.form['card_number']
-        order_no = request.form['order_no']
-        end_date = request.form['end_date']
-        cvv = request.form['cvv']
-        payment_method = request.form['payment_method']
-        payment_date = request.form['payment_date']
-        province = request.form['province']
-        postal_code = request.form['postal_code']
-        recipient_phone = request.form['recipient_phone']
+        cardholder_name = request.json['cardholder_name']
+        card_number = request.json['card_number']
+        order_no = request.json['order_no']
+        end_date = request.json['end_date']
+        cvv = request.json['cvv']
+        payment_method = request.json['payment_method']
+        payment_date = request.json['payment_date']
+        province = request.json['province']
+        postal_code = request.json['postal_code']
+        recipient_phone = request.json['recipient_phone']
         paymnet_date = datetime.datetime.now()
 
         with sqlite3.connect("Zoladex.db") as conn:
@@ -664,15 +664,15 @@ def shipping():
     response = {}
     if request.method == "POST":
 
-        buyers_fullname = request.form['buyers_fullname']
-        order_no = request.form['order_no']
-        brand = request.form['brand']
-        buyers_address = request.form['buyers_address']
-        city = request.form['city']
-        country = request.form['country']
-        province = request.form['province']
-        postal_code = request.form['postal_code']
-        recipient_phone = request.form['recipient_phone']
+        buyers_fullname = request.json['buyers_fullname']
+        order_no = request.json['order_no']
+        brand = request.json['brand']
+        buyers_address = request.json['buyers_address']
+        city = request.json['city']
+        country = request.json['country']
+        province = request.json['province']
+        postal_code = request.json['postal_code']
+        recipient_phone = request.json['recipient_phone']
         date = datetime.datetime.now()
 
         with sqlite3.connect("Zoladex.db") as conn:
