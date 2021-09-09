@@ -617,11 +617,8 @@ def payment():
         end_date = request.json['end_date']
         cvv = request.json['cvv']
         payment_method = request.json['payment_method']
-        payment_date = request.json['payment_date']
-        province = request.json['province']
-        postal_code = request.json['postal_code']
-        recipient_phone = request.json['recipient_phone']
-        paymnet_date = datetime.datetime.now()
+        payment_date = datetime.datetime.now()
+
 
         with sqlite3.connect("Zoladex.db") as conn:
             cursor = conn.cursor()
@@ -637,9 +634,9 @@ def payment():
             response["message"] = "success"
             response["status_code"] = 201
 
-            msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            msg.body = "Your Payment is done"
-            mail.send(msg)
+            # msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
+            # msg.body = "Your Payment is done"
+            # mail.send(msg)
         return response
 
     if request.method == "GET":
