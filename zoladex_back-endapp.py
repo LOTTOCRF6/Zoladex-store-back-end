@@ -169,11 +169,11 @@ def init_payment_table():
 
 
 # Shipping table
-def shipping_address():
+def init_shipping_table():
     conn = sqlite3.connect('Zoladex.db')
     print("Opened database successfully")
 
-    conn.execute("CREATE TABLE IF NOT EXISTS products_shipping(ship_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+    conn.execute("CREATE TABLE IF NOT EXISTS product_shipping(ship_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                  "buyers_fullname TEXT NOT NULL,"
                  "order_no TEXT NOT NULL,"
                  "brand TEXT NOT NULL,"
@@ -185,7 +185,7 @@ def shipping_address():
                  "recipient_phone TEXT NOT NUll,"
                  "data TEXT NOT NULL,"
                  "FOREIGN KEY(order_no) REFERENCES order_product(order_id))")
-    print("shipping table created successfully")
+    print("shipment table created successfully")
     conn.close()
 
 
@@ -209,6 +209,7 @@ def init_contact_table():
 
 # My closed functions
 init_payment_table()
+init_shipping_table()
 init_contact_table()
 init_products_cart_table()
 init_brand_products_table()
@@ -259,7 +260,7 @@ jwt = JWT(app, authenticate, identity)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'sithandathuzipho@gmail.com'
-app.config['MAIL_PASSWORD'] = 'Crf6ZS@#Mail.com'
+app.config['MAIL_PASSWORD'] = 'Crf6ZS@#GMail.com'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
@@ -320,7 +321,7 @@ def brand_registration():
             response["status_code"] = 201
 
             msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            msg.body = "You have successfully registered"
+            msg.body = "Thanks for sending your application to sell with Zoladex Clothing.If you didn`t hear from us in the next 5 days consed your application unsuccessefully"
             mail.send(msg)
         return response
     if request.method == "GET":
@@ -373,9 +374,9 @@ def user_registration():
             response["message"] = "success"
             response["status_code"] = 201
 
-            # msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            # msg.body = "You have successfully registered"
-            # mail.send(msg)
+            msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
+            msg.body = "You have successfully registered"
+            mail.send(msg)
 
             # Find these values at https://twilio.com/user/account
             # To set up environmental variables, see http://twil.io/secure
@@ -550,7 +551,7 @@ def checkouts():
         response['data'] = tuple(deal_acc)
 
         msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-        msg.body = "You have successfully checkout your Products"
+        msg.body = "You have successfully checkout your Products.Send us your shipment details"
         mail.send(msg)
         return response
 
@@ -634,9 +635,9 @@ def payment():
             response["message"] = "success"
             response["status_code"] = 201
 
-            # msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
-            # msg.body = "Your Payment is done"
-            # mail.send(msg)
+            msg = Message('WELCOME', sender='sithandathuzipho@gmail.com', recipients=['sithandathuzipho@gmail.com'])
+            msg.body = "Your Payment is done.Send us your shipment details"
+            mail.send(msg)
         return response
 
     if request.method == "GET":
@@ -670,11 +671,11 @@ def shipping():
         province = request.json['province']
         postal_code = request.json['postal_code']
         recipient_phone = request.json['recipient_phone']
-        date = datetime.datetime.now()
+        data = datetime.datetime.now()
 
         with sqlite3.connect("Zoladex.db") as conn:
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO shipping("
+            cursor.execute("INSERT INTO product_shipping("
                            "buyers_fullname,"
                            "order_no,"
                            "brand,"
@@ -684,7 +685,7 @@ def shipping():
                            "province,"
                            "postal_code,"
                            "recipient_phone,"
-                           "date) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (buyers_fullname, order_no, brand, buyers_address, city, country, province, postal_code, recipient_phone, date))
+                           "data) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (buyers_fullname, order_no, brand, buyers_address, city, country, province, postal_code, recipient_phone, data))
             conn.commit()
             response["message"] = "success"
             response["status_code"] = 201
