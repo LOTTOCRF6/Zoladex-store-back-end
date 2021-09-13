@@ -12,16 +12,10 @@ from smtplib import SMTPRecipientsRefused, SMTPAuthenticationError
 
 
 class User(object):
-    def __init__(self, user_id, first_name, last_name, username, password, address, phone, email):
-        self.user_id = user_id
-        self.id = user_id
-        self.first_name = first_name
-        self.last_name = last_name
+    def __init__(self, id, username, password):
+        self.id = id
         self.username = username
         self.password = password
-        self.address = address
-        self.phone = phone
-        self.email = email
 
 
 # user registration
@@ -226,7 +220,7 @@ def fetch_users():
         users = cursor.fetchall()
         new_data = []
         for data in users:
-            new_data.append(User(data[0], data[3], data[4], data[3], data[4], data[5], data[6], data[7]))
+            new_data.append(User(data[0], data[3], data[4]))
 
     return new_data
 
@@ -235,7 +229,7 @@ users = fetch_users()
 
 
 username_table = {u.username: u for u in users}
-user_id_table = {u.user_id: u for u in users}
+userid_table = {u.id: u for u in users}
 
 
 def authenticate(username, password):
@@ -246,7 +240,7 @@ def authenticate(username, password):
 
 def identity(payload):
     user_id = payload['identity']
-    return user_id_table.get(user_id, None)
+    return userid_table.get(user_id, None)
 
 
 app = Flask(__name__)
