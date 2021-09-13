@@ -958,7 +958,7 @@ def update_product(product_id):
 
 
 # delete product by id
-@app.route("/delete-product/<int:prod_id>", methods=['POST'])
+@app.route("/delete-product/<int:product_id>", methods=['POST'])
 @cross_origin()
 # @jwt_required()
 def delete_single_product(product_id):
