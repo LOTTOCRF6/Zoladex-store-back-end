@@ -772,6 +772,20 @@ def delete_user(user_id):
     return response
 
 
+@app.route("/get-single-user/<password>", methods=['GET'])
+@cross_origin()
+# @jwt_required()
+def get_single_user(password):
+    response = {}
+    with sqlite3.connect("Zoladex.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM user_registration WHERE password=?", [password])
+        conn.commit()
+        response['status_code'] = 200
+        response['message'] = "User successfully."
+    return response
+
+
 # update single user
 @app.route('/update-user/<int:user_id>/', methods=["PUT"])
 @cross_origin()
